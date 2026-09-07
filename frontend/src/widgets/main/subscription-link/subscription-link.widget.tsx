@@ -45,35 +45,34 @@ export const SubscriptionLinkWidget = ({ supportUrl, hideGetLink }: IProps) => {
 
     const renderSupportLink = (supportUrl: string) => {
         const iconConfig = {
-            't.me': { icon: IconBrandTelegram, color: '#0088cc' },
-            'discord.com': { icon: IconBrandDiscord, color: '#5865F2' },
-            'vk.com': { icon: IconBrandVk, color: '#0077FF' }
+            't.me': { icon: IconBrandTelegram },
+            'discord.com': { icon: IconBrandDiscord },
+            'vk.com': { icon: IconBrandVk }
         }
 
         const matchedPlatform = Object.entries(iconConfig).find(([domain]) =>
             supportUrl.includes(domain)
         )
 
-        const { icon: Icon, color } = matchedPlatform
-            ? matchedPlatform[1]
-            : { icon: IconMessageChatbot, color: 'cyan' }
+        const Icon = matchedPlatform ? matchedPlatform[1].icon : IconMessageChatbot
 
         return (
             <ActionIcon
-                c={color}
+                c="white"
                 component="a"
                 href={supportUrl}
                 radius="md"
                 rel="noopener noreferrer"
-                size="xl"
+                size="md"
                 style={{
-                    background: 'rgba(255, 255, 255, 0.02)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)'
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    color: '#ffffff'
                 }}
                 target="_blank"
                 variant="default"
             >
-                <Icon />
+                <Icon size={18} />
             </ActionIcon>
         )
     }
@@ -128,10 +127,16 @@ export const SubscriptionLinkWidget = ({ supportUrl, hideGetLink }: IProps) => {
                     className={classes.actionIcon}
                     onClick={handleGetLink}
                     radius="md"
-                    size="xl"
+                    size="md"
+                    c="white"
+                    style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                        color: '#ffffff'
+                    }}
                     variant="default"
                 >
-                    <IconLink />
+                    <IconLink size={18} />
                 </ActionIcon>
             )}
 

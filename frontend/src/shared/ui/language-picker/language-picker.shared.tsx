@@ -52,16 +52,17 @@ export function LanguagePicker(props: IProps) {
         <Menu position="bottom" width={150} withArrow={false} withinPortal>
             <Menu.Target>
                 <ActionIcon
-                    color="gray"
+                    c="white"
                     radius="md"
-                    size="xl"
+                    size="md"
                     style={{
-                        background: 'rgba(255, 255, 255, 0.02)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)'
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                        color: '#ffffff'
                     }}
                     variant="default"
                 >
-                    <IconLanguage size={22} />
+                    <IconLanguage size={18} />
                 </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown
