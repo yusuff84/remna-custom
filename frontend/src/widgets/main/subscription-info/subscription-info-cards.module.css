@@ -1,18 +1,5 @@
-.cardsGrid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-}
-
-@media (max-width: 360px) {
-    .cardsGrid {
-        grid-template-columns: 1fr;
-        gap: 6px;
-    }
-}
-
 .cardItem {
-    padding: 8px 12px;
+    padding: 8px 14px;
     background: linear-gradient(135deg, rgba(8, 16, 32, 0.85) 0%, rgba(5, 11, 22, 0.9) 100%);
     border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: var(--mantine-radius-md);
@@ -20,10 +7,11 @@
     -webkit-backdrop-filter: blur(14px);
     box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.4);
     transition: all 0.2s ease;
+    min-height: 38px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: 48px;
+    width: 100%;
 }
 
 .cardItem:hover {
@@ -34,9 +22,9 @@
 
 .iconWrapper {
     flex-shrink: 0;
-    width: 28px;
-    height: 28px;
-    border-radius: 7px;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -47,16 +35,14 @@
 
 .label {
     color: #94a3b8;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.4px;
     text-transform: uppercase;
-    line-height: 1.1;
 }
 
 .value {
     color: #ffffff;
     font-weight: 700;
     font-size: 13px;
-    line-height: 1.2;
 }
