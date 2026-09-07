@@ -36,6 +36,7 @@ export function App() {
                 requestFullscreen?: () => void
                 setHeaderColor?: (c: string) => void
                 setBackgroundColor?: (c: string) => void
+                disableClosingConfirmation?: () => void
             } } })?.Telegram?.WebApp
 
             if (tg) {
@@ -44,6 +45,7 @@ export function App() {
                 tg.requestFullscreen?.()
                 tg.setHeaderColor?.('#040914')
                 tg.setBackgroundColor?.('#040914')
+                tg.disableClosingConfirmation?.()
             }
         } catch {}
     }, [])
