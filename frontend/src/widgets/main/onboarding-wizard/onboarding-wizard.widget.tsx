@@ -196,78 +196,31 @@ export const OnboardingWizardWidget = ({ platform }: IProps) => {
         })
     }
 
-    const getFinalConnectUrl = (app: TSubscriptionPageAppConfig): string => {
+    const handleConnect = (app: TSubscriptionPageAppConfig) => {
+        vibrate('success')
+        copyToClipboard(subscriptionUrl)
+        clipboard.copy(subscriptionUrl)
+
         const linkBtn = app.blocks
             ?.flatMap((b) => b.buttons)
             ?.find((btn) => btn.type === 'subscriptionLink')
 
-        if (linkBtn) {
-            return TemplateEngine.formatWithMetaInfo(linkBtn.link, {
-                subscriptionUrl,
-                username: subscription.user.username
-            })
-        }
-
-        const nameLower = app.name.toLowerCase()
-        if (nameLower.includes('incy')) {
-            return `incy://add/${subscriptionUrl}`
-        }
-        if (nameLower.includes('happ')) {
-            return `happ://add/${subscriptionUrl}`
-        }
-        return subscriptionUrl
-    }
-
-    const finalConnectUrl = getFinalConnectUrl(activeApp)
-
-    const handleConnectAction = (app: TSubscriptionPageAppConfig, url: string) => {
-        vibrate('success')
-        copyToClipboard(subscriptionUrl)
-        clipboard.copy(subscriptionUrl)
+        const formattedUrl = linkBtn
+            ? TemplateEngine.formatWithMetaInfo(linkBtn.link, {
+                  subscriptionUrl,
+                  username: subscription.user.username
+              })
+            : undefined
 
         notifications.show({
             title: 'Подключение к VPN',
             message: `Открываем ${app.name}... Ключ подписки скопирован в буфер.`,
             color: 'blue',
-            autoClose: 4000
+            autoClose: 3000
         })
 
-        // Programmatic trigger fallbacks for mobile webviews / in-app browsers
-        try {
-            const a = document.createElement('a')
-            a.href = url
-            a.target = '_blank'
-            a.rel = 'noopener noreferrer'
-            document.body.appendChild(a)
-            a.click()
-            document.body.removeChild(a)
-        } catch {}
-
-        try {
-            window.open(url, '_blank')
-        } catch {}
-
-        try {
-            window.location.href = url
-        } catch {}
-    }
-
-    const isTelegram = Boolean(
-        typeof window !== 'undefined' &&
-            ((window as unknown as { Telegram?: { WebApp?: { initData?: string; platform?: string } } })
-                ?.Telegram?.WebApp?.platform ||
-                (window as unknown as { Telegram?: { WebApp?: { initData?: string } } })?.Telegram
-                    ?.WebApp?.initData)
-    )
-
-    const handleOpenInBrowser = () => {
-        const tg = (
-            window as unknown as { Telegram?: { WebApp?: { openLink?: (url: string) => void } } }
-        )?.Telegram?.WebApp
-        if (tg?.openLink) {
-            tg.openLink(window.location.href)
-        } else {
-            window.open(window.location.href, '_blank')
+        if (formattedUrl) {
+            window.open(formattedUrl, '_blank')
         }
     }
 
@@ -403,19 +356,17 @@ export const OnboardingWizardWidget = ({ platform }: IProps) => {
 
                     {/* Two Big Action Buttons: YES / NO */}
                     <div className={classes.askButtonsRow}>
-                        <a
-                            href={finalConnectUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                        <button
+                            type="button"
                             className={classes.btnYes}
                             onClick={() => {
-                                handleConnectAction(activeApp, finalConnectUrl)
+                                handleConnect(activeApp)
                                 setStep('connect')
                             }}
                         >
                             <IconCheck size={16} />
                             <span>ДА, У МЕНЯ {activeApp.name.toUpperCase()}</span>
-                        </a>
+                        </button>
 
                         <button
                             type="button"
@@ -480,12 +431,12 @@ export const OnboardingWizardWidget = ({ platform }: IProps) => {
                         type="button"
                         className={classes.iDownloadedBtn}
                         onClick={() => {
-                            vibrate('success')
+                            handleConnect(activeApp)
                             setStep('connect')
                         }}
                     >
                         <IconCheck size={18} />
-                        Я СКАЧАЛ {activeApp.name.toUpperCase()}
+                        <span>Я СКАЧАЛ {activeApp.name.toUpperCase()}</span>
                     </button>
 
                     {/* Back Button */}
@@ -513,35 +464,15 @@ export const OnboardingWizardWidget = ({ platform }: IProps) => {
                         Нажмите кнопку ниже для автоматической настройки в {activeApp.name}:
                     </div>
 
-                    {/* Big Primary Connect CTA Anchor Link */}
-                    <a
-                        href={finalConnectUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    {/* Big Primary Connect CTA Button (exact behavior like original Remnawave) */}
+                    <button
+                        type="button"
                         className={classes.connectButton}
-                        onClick={() => handleConnectAction(activeApp, finalConnectUrl)}
+                        onClick={() => handleConnect(activeApp)}
                     >
                         <IconRocket size={20} />
                         <span>ПОДКЛЮЧИТЬ ВПН</span>
-                    </a>
-
-                    {/* Notice that key is copied */}
-                    <div className={classes.clipboardNotice}>
-                        <IconCheck size={15} style={{ color: '#60a5fa', flexShrink: 0 }} />
-                        <span>Ссылка на подписку уже скопирована в буфер обмена!</span>
-                    </div>
-
-                    {/* Telegram WebApp Browser Escape Hatch */}
-                    {isTelegram && (
-                        <button
-                            type="button"
-                            className={classes.openInBrowserBtn}
-                            onClick={handleOpenInBrowser}
-                        >
-                            <IconExternalLink size={14} />
-                            <span>Открыть в Safari / браузере для прямого импорта</span>
-                        </button>
-                    )}
+                    </button>
 
                     {/* Fallback Manual Box */}
                     <div className={classes.manualFallbackBox}>
