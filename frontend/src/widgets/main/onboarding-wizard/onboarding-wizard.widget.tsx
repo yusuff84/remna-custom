@@ -73,6 +73,33 @@ function detectPlatform(): TSubscriptionPagePlatformKey | undefined {
     return undefined
 }
 
+function copyToClipboard(text: string): boolean {
+    let success = false
+    try {
+        if (navigator?.clipboard?.writeText) {
+            navigator.clipboard.writeText(text)
+            success = true
+        }
+    } catch {}
+
+    try {
+        const textArea = document.createElement('textarea')
+        textArea.value = text
+        textArea.style.position = 'fixed'
+        textArea.style.top = '-9999px'
+        textArea.style.left = '-9999px'
+        textArea.style.opacity = '0'
+        textArea.setAttribute('readonly', '')
+        document.body.appendChild(textArea)
+        textArea.select()
+        textArea.setSelectionRange(0, 99999)
+        success = document.execCommand('copy') || success
+        document.body.removeChild(textArea)
+    } catch {}
+
+    return success
+}
+
 export const OnboardingWizardWidget = ({ platform }: IProps) => {
     const { t, baseTranslations } = useTranslation()
     const { platforms, svgLibrary } = useAppConfig()
@@ -119,6 +146,7 @@ export const OnboardingWizardWidget = ({ platform }: IProps) => {
 
     const handleCopyKey = () => {
         vibrate('tap')
+        copyToClipboard(subscriptionUrl)
         clipboard.copy(subscriptionUrl)
         notifications.show({
             title: t(baseTranslations.linkCopied),
@@ -168,27 +196,79 @@ export const OnboardingWizardWidget = ({ platform }: IProps) => {
         })
     }
 
-    const handleConnect = (app: TSubscriptionPageAppConfig) => {
-        vibrate('success')
-        clipboard.copy(subscriptionUrl)
-        notifications.show({
-            title: 'Подключение к VPN',
-            message: `Открываем ${app.name}... Ключ подписки скопирован в буфер.`,
-            color: 'blue'
-        })
-
+    const getFinalConnectUrl = (app: TSubscriptionPageAppConfig): string => {
         const linkBtn = app.blocks
             ?.flatMap((b) => b.buttons)
             ?.find((btn) => btn.type === 'subscriptionLink')
 
-        const finalUrl = linkBtn
-            ? TemplateEngine.formatWithMetaInfo(linkBtn.link, {
-                  subscriptionUrl,
-                  username: subscription.user.username
-              })
-            : subscriptionUrl
+        if (linkBtn) {
+            return TemplateEngine.formatWithMetaInfo(linkBtn.link, {
+                subscriptionUrl,
+                username: subscription.user.username
+            })
+        }
 
-        window.location.href = finalUrl
+        const nameLower = app.name.toLowerCase()
+        if (nameLower.includes('incy')) {
+            return `incy://add/${subscriptionUrl}`
+        }
+        if (nameLower.includes('happ')) {
+            return `happ://add/${subscriptionUrl}`
+        }
+        return subscriptionUrl
+    }
+
+    const finalConnectUrl = getFinalConnectUrl(activeApp)
+
+    const handleConnectAction = (app: TSubscriptionPageAppConfig, url: string) => {
+        vibrate('success')
+        copyToClipboard(subscriptionUrl)
+        clipboard.copy(subscriptionUrl)
+
+        notifications.show({
+            title: 'Подключение к VPN',
+            message: `Открываем ${app.name}... Ключ подписки скопирован в буфер.`,
+            color: 'blue',
+            autoClose: 4000
+        })
+
+        // Programmatic trigger fallbacks for mobile webviews / in-app browsers
+        try {
+            const a = document.createElement('a')
+            a.href = url
+            a.target = '_blank'
+            a.rel = 'noopener noreferrer'
+            document.body.appendChild(a)
+            a.click()
+            document.body.removeChild(a)
+        } catch {}
+
+        try {
+            window.open(url, '_blank')
+        } catch {}
+
+        try {
+            window.location.href = url
+        } catch {}
+    }
+
+    const isTelegram = Boolean(
+        typeof window !== 'undefined' &&
+            ((window as unknown as { Telegram?: { WebApp?: { initData?: string; platform?: string } } })
+                ?.Telegram?.WebApp?.platform ||
+                (window as unknown as { Telegram?: { WebApp?: { initData?: string } } })?.Telegram
+                    ?.WebApp?.initData)
+    )
+
+    const handleOpenInBrowser = () => {
+        const tg = (
+            window as unknown as { Telegram?: { WebApp?: { openLink?: (url: string) => void } } }
+        )?.Telegram?.WebApp
+        if (tg?.openLink) {
+            tg.openLink(window.location.href)
+        } else {
+            window.open(window.location.href, '_blank')
+        }
     }
 
     const CurrentPlatformIcon =
@@ -199,13 +279,13 @@ export const OnboardingWizardWidget = ({ platform }: IProps) => {
             return (
                 <svg
                     fill="none"
-                    height="22"
+                    height="20"
                     stroke="currentColor"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2.2"
                     viewBox="0 0 24 24"
-                    width="22"
+                    width="20"
                 >
                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                 </svg>
@@ -215,11 +295,11 @@ export const OnboardingWizardWidget = ({ platform }: IProps) => {
             return (
                 <span
                     dangerouslySetInnerHTML={{ __html: svgLibrary[app.svgIconKey] }}
-                    style={{ display: 'flex', alignItems: 'center', width: 22, height: 22 }}
+                    style={{ display: 'flex', alignItems: 'center', width: 20, height: 20 }}
                 />
             )
         }
-        return <IconRocket size={22} />
+        return <IconRocket size={20} />
     }
 
     const getDownloadButtons = (app: TSubscriptionPageAppConfig) => {
@@ -245,7 +325,7 @@ export const OnboardingWizardWidget = ({ platform }: IProps) => {
             <div>
                 <div className={classes.deviceRow}>
                     <span className={classes.devicePill}>
-                        <CurrentPlatformIcon size={15} />
+                        <CurrentPlatformIcon size={14} />
                         {PLATFORM_CONFIG[selectedPlatform]?.label || selectedPlatform}
                     </span>
                     <button
@@ -277,7 +357,7 @@ export const OnboardingWizardWidget = ({ platform }: IProps) => {
                                     setIsChoosingPlatform(false)
                                 }}
                             >
-                                <Icon size={15} />
+                                <Icon size={14} />
                                 {label}
                             </button>
                         )
@@ -313,7 +393,7 @@ export const OnboardingWizardWidget = ({ platform }: IProps) => {
                                     </div>
                                     <div className={classes.cardAppName}>{app.name}</div>
                                     <span className={classes.starBadge}>
-                                        <IconStarFilled size={10} />
+                                        <IconStarFilled size={9} />
                                         Рекомендуем
                                     </span>
                                 </div>
@@ -323,17 +403,19 @@ export const OnboardingWizardWidget = ({ platform }: IProps) => {
 
                     {/* Two Big Action Buttons: YES / NO */}
                     <div className={classes.askButtonsRow}>
-                        <button
-                            type="button"
+                        <a
+                            href={finalConnectUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className={classes.btnYes}
                             onClick={() => {
-                                vibrate('tap')
+                                handleConnectAction(activeApp, finalConnectUrl)
                                 setStep('connect')
                             }}
                         >
-                            <IconCheck size={18} />
-                            ДА, У МЕНЯ {activeApp.name.toUpperCase()}
-                        </button>
+                            <IconCheck size={16} />
+                            <span>ДА, У МЕНЯ {activeApp.name.toUpperCase()}</span>
+                        </a>
 
                         <button
                             type="button"
@@ -343,8 +425,8 @@ export const OnboardingWizardWidget = ({ platform }: IProps) => {
                                 setStep('download')
                             }}
                         >
-                            <IconX size={16} />
-                            НЕТ, СКАЧАТЬ
+                            <IconX size={15} />
+                            <span>НЕТ, СКАЧАТЬ</span>
                         </button>
                     </div>
                 </div>
@@ -360,7 +442,7 @@ export const OnboardingWizardWidget = ({ platform }: IProps) => {
                         Установите приложение на устройство, затем нажмите кнопку <strong>«Я скачал»</strong>:
                     </div>
 
-                    {/* Dedicated Download Card for the chosen app (Incy or Happ) */}
+                    {/* Dedicated Download Card for the chosen app */}
                     <div className={classes.singleAppDownloadCard}>
                         <div className={classes.appIconCircle}>
                             {renderAppIcon(activeApp)}
@@ -384,9 +466,9 @@ export const OnboardingWizardWidget = ({ platform }: IProps) => {
                                         rel="noopener noreferrer"
                                         className={classes.downloadLinkCta}
                                     >
-                                        <IconDownload size={16} />
+                                        <IconDownload size={15} />
                                         <span>{label}</span>
-                                        <IconExternalLink size={14} />
+                                        <IconExternalLink size={13} />
                                     </a>
                                 )
                             })}
@@ -402,7 +484,7 @@ export const OnboardingWizardWidget = ({ platform }: IProps) => {
                             setStep('connect')
                         }}
                     >
-                        <IconCheck size={20} />
+                        <IconCheck size={18} />
                         Я СКАЧАЛ {activeApp.name.toUpperCase()}
                     </button>
 
@@ -415,7 +497,7 @@ export const OnboardingWizardWidget = ({ platform }: IProps) => {
                             setStep('ask')
                         }}
                     >
-                        <IconArrowLeft size={15} />
+                        <IconArrowLeft size={14} />
                         Назад к выбору
                     </button>
                 </div>
@@ -431,15 +513,35 @@ export const OnboardingWizardWidget = ({ platform }: IProps) => {
                         Нажмите кнопку ниже для автоматической настройки в {activeApp.name}:
                     </div>
 
-                    {/* Big Primary Connect CTA Button */}
-                    <button
-                        type="button"
+                    {/* Big Primary Connect CTA Anchor Link */}
+                    <a
+                        href={finalConnectUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className={classes.connectButton}
-                        onClick={() => handleConnect(activeApp)}
+                        onClick={() => handleConnectAction(activeApp, finalConnectUrl)}
                     >
-                        <IconRocket size={22} />
-                        ПОДКЛЮЧИТЬ ВПН
-                    </button>
+                        <IconRocket size={20} />
+                        <span>ПОДКЛЮЧИТЬ ВПН</span>
+                    </a>
+
+                    {/* Notice that key is copied */}
+                    <div className={classes.clipboardNotice}>
+                        <IconCheck size={15} style={{ color: '#60a5fa', flexShrink: 0 }} />
+                        <span>Ссылка на подписку уже скопирована в буфер обмена!</span>
+                    </div>
+
+                    {/* Telegram WebApp Browser Escape Hatch */}
+                    {isTelegram && (
+                        <button
+                            type="button"
+                            className={classes.openInBrowserBtn}
+                            onClick={handleOpenInBrowser}
+                        >
+                            <IconExternalLink size={14} />
+                            <span>Открыть в Safari / браузере для прямого импорта</span>
+                        </button>
+                    )}
 
                     {/* Fallback Manual Box */}
                     <div className={classes.manualFallbackBox}>
@@ -485,7 +587,7 @@ export const OnboardingWizardWidget = ({ platform }: IProps) => {
                             setStep('ask')
                         }}
                     >
-                        <IconArrowLeft size={15} />
+                        <IconArrowLeft size={14} />
                         Выбрать другое приложение
                     </button>
                 </div>
