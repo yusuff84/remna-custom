@@ -1,0 +1,111 @@
+.container {
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.22) 0%, rgba(15, 23, 42, 0.75) 100%);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+    border-radius: var(--mantine-radius-md);
+    padding: 8px 12px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.topRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.titleGroup {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.keyIcon {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    background: rgba(59, 130, 246, 0.2);
+    border: 1px solid rgba(59, 130, 246, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #60a5fa;
+}
+
+.title {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: -0.1px;
+}
+
+.subtitle {
+    color: #94a3b8;
+    font-size: 11px;
+}
+
+.inputGroup {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.keyDisplay {
+    flex: 1;
+    background: rgba(10, 15, 29, 0.85);
+    border: 1px solid rgba(59, 130, 246, 0.22);
+    border-radius: var(--mantine-radius-sm);
+    padding: 5px 10px;
+    font-family: var(--mantine-font-family-monospace);
+    font-size: 12px;
+    color: #cbd5e1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    user-select: all;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    transition: border-color 0.2s;
+}
+
+.keyDisplay:hover {
+    border-color: rgba(96, 165, 250, 0.5);
+}
+
+.copyButton {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    border: 1px solid rgba(147, 197, 253, 0.3);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 12px;
+    height: 32px;
+    padding: 0 12px;
+    box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.copyButton:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    transform: translateY(-1px);
+}
+
+.qrButton {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+    color: #93c5fd;
+    height: 32px;
+    width: 32px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.qrButton:hover {
+    background: rgba(51, 65, 85, 0.9);
+    border-color: rgba(96, 165, 250, 0.45);
+    color: #ffffff;
+}

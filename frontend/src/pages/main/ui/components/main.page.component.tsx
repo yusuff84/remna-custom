@@ -1,40 +1,20 @@
-import { Box, Center, Container, Group, Image, Stack, Title } from '@mantine/core'
+import { Box, Container, Group, Stack, Title } from '@mantine/core'
 import { TSubscriptionPagePlatformKey } from '@remnawave/subscription-page-types'
 
 import {
-    AccordionBlockRenderer,
-    CardsBlockRenderer,
-    InstallationGuideConnector,
-    MinimalBlockRenderer,
-    RawKeysWidget,
+    OnboardingWizardWidget,
+    QuickKeyWidget,
     SubscriptionInfoCardsWidget,
-    SubscriptionInfoCollapsedWidget,
-    SubscriptionInfoExpandedWidget,
-    SubscriptionLinkWidget,
-    TimelineBlockRenderer
+    SubscriptionLinkWidget
 } from '@widgets/main'
 import { useAppConfig, useAppConfigStoreActions, useCurrentLang } from '@entities/app-config-store'
 import { LanguagePicker } from '@shared/ui/language-picker/language-picker.shared'
-import { Page, RemnawaveLogo } from '@shared/ui'
+import { Page, TopVpnLogoMark } from '@shared/ui'
 
 interface IMainPageComponentProps {
     isMobile: boolean
     platform: TSubscriptionPagePlatformKey | undefined
 }
-
-const BLOCK_RENDERERS = {
-    cards: CardsBlockRenderer,
-    timeline: TimelineBlockRenderer,
-    accordion: AccordionBlockRenderer,
-    minimal: MinimalBlockRenderer
-} as const
-
-const SUBSCRIPTION_INFO_BLOCK_RENDERERS = {
-    cards: SubscriptionInfoCardsWidget,
-    collapsed: SubscriptionInfoCollapsedWidget,
-    expanded: SubscriptionInfoExpandedWidget,
-    hidden: null
-} as const
 
 export const MainPageComponent = ({ isMobile, platform }: IMainPageComponentProps) => {
     const config = useAppConfig()
@@ -42,13 +22,6 @@ export const MainPageComponent = ({ isMobile, platform }: IMainPageComponentProp
     const { setLanguage } = useAppConfigStoreActions()
 
     const brandName = config.brandingSettings.title
-    let hasCustomLogo = !!config.brandingSettings.logoUrl
-
-    if (hasCustomLogo) {
-        if (config.brandingSettings.logoUrl.includes('docs.rw')) {
-            hasCustomLogo = false
-        }
-    }
 
     const hasPlatformApps: Record<TSubscriptionPagePlatformKey, boolean> = {
         ios: Boolean(config.platforms.ios?.apps.length),
@@ -61,79 +34,69 @@ export const MainPageComponent = ({ isMobile, platform }: IMainPageComponentProp
     }
 
     const atLeastOnePlatformApp = Object.values(hasPlatformApps).some((value) => value)
-
-    const SubscriptionInfoBlockRenderer =
-        SUBSCRIPTION_INFO_BLOCK_RENDERERS[config.uiConfig.subscriptionInfoBlockType]
+    const showSubscriptionInfo = config.uiConfig.subscriptionInfoBlockType !== 'hidden'
 
     return (
         <Page>
-            <Box className="header-wrapper" py="md">
-                <Container maw={1200} px={{ base: 'md', sm: 'lg', md: 'xl' }}>
+            {/* Header */}
+            <Box className="header-wrapper" py="xs">
+                <Container maw={1100} px={{ base: 'md', sm: 'lg', md: 'xl' }}>
                     <Group justify="space-between">
-                        <Group gap="sm" style={{ userSelect: 'none' }} wrap="nowrap">
-                            {hasCustomLogo ? (
-                                <Image
-                                    alt="logo"
-                                    fit="contain"
-                                    src={config.brandingSettings.logoUrl}
-                                    style={{
-                                        width: '32px',
-                                        height: '32px',
-                                        flexShrink: 0
-                                    }}
-                                />
-                            ) : (
-                                <RemnawaveLogo c="cyan" size={32} />
-                            )}
+                        {/* Logo Mark + Brand Name pulled from config */}
+                        <Group gap="xs" style={{ userSelect: 'none' }} wrap="nowrap">
+                            <TopVpnLogoMark size={28} />
                             <Title
-                                c={hasCustomLogo ? 'white' : 'cyan'}
-                                fw={700}
+                                c="white"
+                                fw={800}
                                 order={4}
-                                size="lg"
+                                size="md"
+                                style={{ letterSpacing: '0.8px' }}
                             >
-                                {brandName}
+                                {brandName || 'TOP VPN'}
                             </Title>
                         </Group>
 
-                        <SubscriptionLinkWidget
-                            hideGetLink={config.baseSettings.hideGetLinkButton}
-                            supportUrl={config.brandingSettings.supportUrl}
-                        />
+                        {/* Language & Support Actions */}
+                        <Group gap="xs" wrap="nowrap">
+                            <LanguagePicker
+                                currentLang={currentLang}
+                                locales={config.locales}
+                                onLanguageChange={setLanguage}
+                            />
+                            <SubscriptionLinkWidget
+                                hideGetLink={config.baseSettings.hideGetLinkButton}
+                                supportUrl={config.brandingSettings.supportUrl}
+                            />
+                        </Group>
                     </Group>
                 </Container>
             </Box>
 
+            {/* Main Content */}
             <Container
-                maw={1200}
+                maw={1100}
                 px={{ base: 'md', sm: 'lg', md: 'xl' }}
-                py="xl"
+                py={{ base: 'sm', sm: 'md', md: 'lg' }}
                 style={{ position: 'relative', zIndex: 1 }}
             >
-                <Stack gap="xl">
-                    {SubscriptionInfoBlockRenderer && (
-                        <SubscriptionInfoBlockRenderer isMobile={isMobile} />
+                <Stack gap="sm">
+                    {/* 1. Верхний компактный блок: Срок действия и Трафик */}
+                    {showSubscriptionInfo && (
+                        <SubscriptionInfoCardsWidget isMobile={isMobile} />
                     )}
 
+                    {/* 2. Ссылка на ключ для быстрого копирования */}
+                    <QuickKeyWidget isMobile={isMobile} />
+
+                    {/* 3. Нижний интерактивный блок подключения с увеличенным отступом */}
                     {atLeastOnePlatformApp && (
-                        <InstallationGuideConnector
-                            BlockRenderer={
-                                BLOCK_RENDERERS[config.uiConfig.installationGuidesBlockType]
-                            }
-                            hasPlatformApps={hasPlatformApps}
-                            isMobile={isMobile}
-                            platform={platform}
-                        />
+                        <Box mt={{ base: 20, sm: 28, md: 36 }}>
+                            <OnboardingWizardWidget
+                                isMobile={isMobile}
+                                platform={platform}
+                            />
+                        </Box>
                     )}
-
-                    <RawKeysWidget isMobile={isMobile} />
-
-                    <Center>
-                        <LanguagePicker
-                            currentLang={currentLang}
-                            locales={config.locales}
-                            onLanguageChange={setLanguage}
-                        />
-                    </Center>
                 </Stack>
             </Container>
         </Page>

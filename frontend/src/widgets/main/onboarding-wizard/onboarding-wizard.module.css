@@ -1,0 +1,458 @@
+.wizardContainer {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(10, 15, 29, 0.92) 100%);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+    border-radius: var(--mantine-radius-xl);
+    padding: 24px 20px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.5), 0 0 30px rgba(37, 99, 235, 0.12);
+    position: relative;
+    text-align: center;
+}
+
+@media (max-width: 640px) {
+    .wizardContainer {
+        padding: 18px 14px;
+    }
+}
+
+/* Device bar */
+.deviceRow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 9999px;
+    padding: 5px 12px;
+    margin-bottom: 16px;
+}
+
+.devicePill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #f1f5f9;
+}
+
+.changeDeviceBtn {
+    background: transparent;
+    border: none;
+    color: #60a5fa;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 2px 5px;
+    border-radius: 4px;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.changeDeviceBtn:hover {
+    color: #93c5fd;
+    background: rgba(59, 130, 246, 0.15);
+}
+
+.deviceSelectorGrid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+    animation: fadeIn 0.2s ease;
+}
+
+.deviceOptionBtn {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: var(--mantine-radius-md);
+    padding: 6px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #cbd5e1;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.deviceOptionBtn:hover {
+    background: rgba(30, 58, 138, 0.3);
+    border-color: rgba(96, 165, 250, 0.4);
+    color: #ffffff;
+}
+
+.deviceOptionBtnActive {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.3) 0%, rgba(30, 58, 138, 0.4) 100%) !important;
+    border-color: #3b82f6 !important;
+    color: #ffffff !important;
+    font-weight: 700;
+    box-shadow: 0 0 12px rgba(37, 99, 235, 0.3);
+}
+
+/* Screen Title & Subtitle */
+.mainQuestion {
+    font-size: 19px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+    margin-bottom: 5px;
+    line-height: 1.25;
+}
+
+@media (max-width: 500px) {
+    .mainQuestion {
+        font-size: 17px;
+    }
+}
+
+.mainSubtitle {
+    color: #94a3b8;
+    font-size: 13px;
+    margin-bottom: 20px;
+    line-height: 1.3;
+}
+
+/* Two Featured Apps Container */
+.twoAppsContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    max-width: 500px;
+    margin: 0 auto 20px auto;
+}
+
+@media (max-width: 440px) {
+    .twoAppsContainer {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+}
+
+.appSelectCard {
+    background: rgba(15, 23, 42, 0.75);
+    border: 1.5px solid rgba(59, 130, 246, 0.22);
+    border-radius: var(--mantine-radius-lg);
+    padding: 16px 14px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    user-select: none;
+}
+
+.appSelectCard:hover {
+    background: rgba(30, 41, 59, 0.7);
+    border-color: rgba(96, 165, 250, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px -4px rgba(0, 0, 0, 0.4), 0 0 16px rgba(37, 99, 235, 0.2);
+}
+
+.appSelectCardActive {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.22) 0%, rgba(30, 58, 138, 0.4) 100%) !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 22px rgba(37, 99, 235, 0.35), 0 8px 24px -5px rgba(0, 0, 0, 0.5) !important;
+    transform: translateY(-2px);
+}
+
+.appSelectCardActive::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 20%;
+    right: 20%;
+    height: 2px;
+    background: #60a5fa;
+    border-radius: 2px;
+    box-shadow: 0 0 8px #60a5fa;
+}
+
+.appIconCircle {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.25) 0%, rgba(15, 23, 42, 0.8) 100%);
+    border: 1px solid rgba(59, 130, 246, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #60a5fa;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s;
+}
+
+.appSelectCard:hover .appIconCircle {
+    transform: scale(1.06);
+}
+
+.appSelectCardActive .appIconCircle {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: #ffffff;
+    box-shadow: 0 0 14px rgba(37, 99, 235, 0.5);
+}
+
+.cardAppName {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+}
+
+.starBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fbbf24;
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    padding: 2px 7px;
+    border-radius: 9999px;
+}
+
+/* YES / NO Action Buttons Row */
+.askButtonsRow {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    max-width: 460px;
+    margin: 0 auto;
+}
+
+@media (max-width: 440px) {
+    .askButtonsRow {
+        flex-direction: column;
+    }
+}
+
+.btnYes {
+    flex: 1.4;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    border: 1px solid rgba(147, 197, 253, 0.4);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 13px 20px;
+    border-radius: var(--mantine-radius-md);
+    box-shadow: 0 4px 18px rgba(37, 99, 235, 0.45);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btnYes:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    box-shadow: 0 6px 24px rgba(37, 99, 235, 0.65);
+    transform: translateY(-1px);
+}
+
+.btnNo {
+    flex: 1;
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+    color: #cbd5e1;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 13px 18px;
+    border-radius: var(--mantine-radius-md);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.btnNo:hover {
+    background: rgba(51, 65, 85, 0.85);
+    border-color: rgba(96, 165, 250, 0.4);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+/* DOWNLOAD SCREEN */
+.downloadScreenBox {
+    max-width: 480px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    animation: fadeIn 0.25s ease;
+}
+
+.singleAppDownloadCard {
+    background: rgba(10, 15, 29, 0.85);
+    border: 1.5px solid rgba(59, 130, 246, 0.35);
+    border-radius: var(--mantine-radius-lg);
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4), 0 0 16px rgba(37, 99, 235, 0.15);
+}
+
+.downloadButtonsList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    max-width: 320px;
+}
+
+.downloadLinkCta {
+    background: rgba(30, 58, 138, 0.35);
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 11px 18px;
+    border-radius: var(--mantine-radius-md);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    width: 100%;
+    justify-content: center;
+}
+
+.downloadLinkCta:hover {
+    background: rgba(37, 99, 235, 0.4);
+    border-color: rgba(96, 165, 250, 0.6);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.iDownloadedBtn {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    border: 1px solid rgba(147, 197, 253, 0.45);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 15px 24px;
+    border-radius: var(--mantine-radius-md);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.iDownloadedBtn:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.65);
+    transform: translateY(-2px);
+}
+
+/* CONNECT SCREEN */
+.connectScreenBox {
+    max-width: 480px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    animation: fadeIn 0.25s ease;
+}
+
+.connectButton {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    border: 1px solid rgba(147, 197, 253, 0.45);
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 800;
+    padding: 16px 28px;
+    border-radius: var(--mantine-radius-md);
+    box-shadow: 0 6px 25px rgba(37, 99, 235, 0.5);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    letter-spacing: 0.2px;
+}
+
+.connectButton:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    box-shadow: 0 8px 30px rgba(37, 99, 235, 0.7);
+    transform: translateY(-2px);
+}
+
+.activeAppNotice {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 9999px;
+    padding: 4px 12px;
+    margin: 0 auto;
+}
+
+.manualFallbackBox {
+    background: rgba(10, 15, 29, 0.75);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: var(--mantine-radius-md);
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-align: left;
+}
+
+.backBtn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.15s;
+    margin: 0 auto;
+}
+
+.backBtn:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -30,9 +30,7 @@ export default defineConfig({
             }
         })
     ],
-    optimizeDeps: {
-        include: ['html-parse-stringify']
-    },
+    optimizeDeps: {},
     build: {
         target: 'esnext',
         outDir: 'dist',

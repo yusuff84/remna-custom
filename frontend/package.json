@@ -14,6 +14,7 @@
   },
   "type": "module",
   "scripts": {
+    "mock:gen": "node ../scripts/generate-mock.mjs",
     "start:dev": "vite",
     "start:build": "NODE_ENV=production tsc && vite build",
     "cb": "vite build",

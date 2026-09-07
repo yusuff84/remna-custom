@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 95" width="170" height="95" fill="none">
+  <!-- T -->
+  <rect x="6" y="16" width="34" height="8" rx="1" fill="white" />
+  <rect x="19" y="16" width="8" height="40" rx="1" fill="white" />
+
+  <!-- O (Speedometer Gauge) -->
+  <!-- Arc path: circle at (68, 36), radius 21, stroke 8. Open at bottom from 50 deg to 130 deg -->
+  <path d="M 51.5 50 A 21 21 0 1 1 84.5 50" stroke="white" stroke-width="7.5" stroke-linecap="round" fill="none" />
+  <!-- Speedometer pointer / needle pointing to ~45 deg -->
+  <line x1="64" y1="40" x2="78" y2="26" stroke="white" stroke-width="6" stroke-linecap="round" />
+  <circle cx="64" cy="40" r="3" fill="white" />
+
+  <!-- Front P -->
+  <path d="M 100 16 H 118 C 126 16 130 20 130 28 C 130 36 126 40 118 40 H 108 V 56 H 100 Z" fill="white" fill-rule="evenodd" />
+  <path d="M 108 24 H 117 C 121 24 122 25.5 122 28 C 122 30.5 121 32 117 32 H 108 Z" fill="#050b14" />
+
+  <!-- Back Layered P (offset right +7, down +4) -->
+  <path d="M 109 20 H 127 C 135 20 139 24 139 32 C 139 40 135 44 127 44 H 117 V 60 H 109 Z" stroke="white" stroke-width="3" fill="none" />
+
+  <!-- VPN Subtitle -->
+  <text x="68" y="78" font-family="'Montserrat', sans-serif" font-size="17" font-weight="900" fill="white" text-anchor="middle" letter-spacing="2">VPN</text>
+</svg>
