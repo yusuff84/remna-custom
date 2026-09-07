@@ -12,6 +12,7 @@ import { NavigationProgress } from '@mantine/nprogress'
 import { Notifications } from '@mantine/notifications'
 import { ModalsProvider } from '@mantine/modals'
 import { useMediaQuery } from '@mantine/hooks'
+import { useEffect } from 'react'
 
 import { initDayjs } from '@shared/utils/time-utils'
 import { theme } from '@shared/constants'
@@ -26,6 +27,26 @@ initDayjs()
 
 export function App() {
     const mq = useMediaQuery('(min-width: 40em)')
+
+    useEffect(() => {
+        try {
+            const tg = (window as unknown as { Telegram?: { WebApp?: {
+                ready: () => void
+                expand: () => void
+                requestFullscreen?: () => void
+                setHeaderColor?: (c: string) => void
+                setBackgroundColor?: (c: string) => void
+            } } })?.Telegram?.WebApp
+
+            if (tg) {
+                tg.ready()
+                tg.expand()
+                tg.requestFullscreen?.()
+                tg.setHeaderColor?.('#040914')
+                tg.setBackgroundColor?.('#040914')
+            }
+        } catch {}
+    }, [])
 
     return (
         <DirectionProvider>

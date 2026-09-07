@@ -75,11 +75,11 @@ export const MainPageComponent = ({ isMobile, platform }: IMainPageComponentProp
             {/* Main Content */}
             <Container
                 maw={1100}
-                px={{ base: 'md', sm: 'lg', md: 'xl' }}
-                py={{ base: 'sm', sm: 'md', md: 'lg' }}
+                px={{ base: 10, sm: 'md', md: 'xl' }}
+                py={{ base: 8, sm: 'md', md: 'lg' }}
                 style={{ position: 'relative', zIndex: 1 }}
             >
-                <Stack gap="sm">
+                <Stack gap={6}>
                     {/* 1. Верхний компактный блок: Срок действия и Трафик */}
                     {showSubscriptionInfo && (
                         <SubscriptionInfoCardsWidget isMobile={isMobile} />
@@ -88,9 +88,9 @@ export const MainPageComponent = ({ isMobile, platform }: IMainPageComponentProp
                     {/* 2. Ссылка на ключ для быстрого копирования */}
                     <QuickKeyWidget isMobile={isMobile} />
 
-                    {/* 3. Нижний интерактивный блок подключения с увеличенным отступом */}
+                    {/* 3. Нижний интерактивный блок подключения с аккуратным отступом */}
                     {atLeastOnePlatformApp && (
-                        <Box mt={{ base: 20, sm: 28, md: 36 }}>
+                        <Box mt={{ base: 10, sm: 16, md: 24 }}>
                             <OnboardingWizardWidget
                                 isMobile={isMobile}
                                 platform={platform}
